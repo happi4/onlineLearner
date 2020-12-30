@@ -1,45 +1,14 @@
-import connect 
+import dao
 
-class BenutzerSpeicher:
+class FachSpeicher:
 
     def __init__(self):
-        self.conn = connect.DBUtil().getExternalConnection()
+        self.conn = dao.connect.DBUtil().getExternalConnection()
         self.conn.jconn.setAutoCommit(False)
         self.complete = None
 
-    def get_courses(self, bid):
-        """Kurse eines bestimmten Benutzer zurückgeben"""
 
-        course_curs = self.conn.cursor()
-
-        courses_squery = """select kurs.name, benutzer.name, kurs.freieplaetze from kurs 
-        join benutzer on kurs.ersteller=benutzer.bnummer where ersteller=?"""
-
-        course_curs.execute(courses_squery, bid)
-        res = course_curs.fetchall()
-
-        course_curs.close()
-        
-        return res
-
-
-    def get_all_courses(self):
-        """Verfügbare Kurse zurückgeben"""
-
-        all_courses_curs = self.conn.cursor()
-
-        all_courses_query = """select kurs.name, benutzer.name, kurs.freieplaetze from kurs 
-        join benutzer on kurs.ersteller=benutzer.bnummer where kurs.freieplaetze > 0"""
-
-        all_courses_curs.execute(all_courses_query)
-        res = all_courses_curs.fetchall()
-
-        all_courses_curs.close()
-
-        return res
-
-
-    #def einreichen(self, agbage): #TODO
+#def einreichen(self, agbage): #TODO
 
     def check_first(self, bnummer, kid):
         """Prüfen, ob ein Tupel ein Benutzer schon eingeschriben ist"""
@@ -58,11 +27,10 @@ class BenutzerSpeicher:
 
         self.conn.commit()
 
-        if res is None: #Fix
+        if res is None:  # Fix
             return True
         else:
             return False
-
 
 
     def space_available(self, kid):
@@ -82,6 +50,7 @@ class BenutzerSpeicher:
 
         query_free_places_curs.close()
 
+        type(free_places)
         #print(free_places)
 
         #if free_places > 0:
@@ -90,7 +59,6 @@ class BenutzerSpeicher:
         else:
             return 0
 
-
     def register(self, bnummer, kid):
         register_curs = self.conn.cursor()
 
@@ -98,15 +66,14 @@ class BenutzerSpeicher:
         register_curs.execute(register_query, (bnummer, kid))  # Fix
 
         register_curs.close()
-        
-        
+
     def einschreiben(self, bnummer, kid, schluessel=None):
         """Benutzer einschreiben"""
 
         try:
 
             update_count_curs = self.conn.cursor()
-        
+
             if self.space_available(kid) > 0:
                 if self.check_first(bnummer, kid) == True:
                     self.register(bnummer, kid)
@@ -115,32 +82,10 @@ class BenutzerSpeicher:
                     update_count_curs.execute(update_count_query, (kid))
 
             update_count_curs.close()
-            
+
             self.completion = True
             self.conn.close()
 
         except Exception as e:
             #connection.abort()
             print(e)
-
-        
-
-
-
-    def completion(self):
-        self.complete = True
-
-    def close(self):
-        if self.conn is not None:
-            try:
-                if self.complete:
-                    self.conn.commit()
-                else:
-                    self.conn.rollback()
-            except Exception as e:
-                print(e)
-            finally:
-                try:
-                    self.conn.close()
-                except Exception as e:
-                    print(e)

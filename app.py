@@ -1,11 +1,10 @@
 from flask import Flask, request, render_template, redirect, url_for
-import connect
+import dao.connect
 import threading
 import csv
 import re
-import benutzer_speicher
-import fach
-import fach_speicher
+import beans.fach
+import dao.application_dao
 
 
 app = Flask(__name__, template_folder='template')
@@ -26,34 +25,35 @@ config = csv_reader("properties.settings")
 @app.route("/<bid>", methods=['GET', 'POST'])
 def index(bid):
     """Erste Seite der Webseite: """
-
-    user_store = benutzer_speicher.BenutzerSpeicher() #User has to be given data
-    #result = False
-    if request.method == "POST":
-        # Form data
-        name = request.form['course_name'] 
-        enroll_key = request.form.get('schluessel')
-        free_spots = request.form.get('freie_plaetze')  # TODO
-        desc = request.form.get('btext')
-        
-        print(name, bid, enroll_key, free_spots, desc)
-        new_course = fach.Kurs(name, bid, free_spots, desc, enroll_key)
-        course_store = fach_speicher.FachSpeicher()
-
-        course_id = course_store.add_course(new_course) # Muss eine valide kid zurückliefern
-        print(course_id, bid)
-        course_store.completion()
-        course_store.close()
-
-        if course_id is not None: #Wenn course_id nicht NULL ist, ist es valid #TODO
-            #with threading.Lock():
-                user_store.einschreiben(bid, course_id, enroll_key) #Add owner to course, Fix
-
-    
+    user_store = dao.application_dao.ApplicationDao() #User has to be given data
     meine_kurse = user_store.get_courses(bid)
     verf_kurse = user_store.get_all_courses()
-    user_store.completion()
-    user_store.close()
+
+    #result = False
+    #if request.method == "POST":
+        # Form data
+        #name = request.form['course_name'] 
+        #enroll_key = request.form.get('schluessel')
+        #free_spots = request.form.get('freie_plaetze')  # TODO
+        #desc = request.form.get('btext')
+        
+        #print(name, bid, enroll_key, free_spots, desc)
+        
+        #new_course = fach.Kurs(name, bid, free_spots, desc, enroll_key)
+        
+        #course_store = dao.application_dao.ApplicationDao()
+
+        #course_id = course_store.add_course(new_course) # Muss eine valide kid zurückliefern
+        #print(course_id, bid)
+        #course_store.completion()
+        #course_store.close()
+
+        #if course_id is not None: #Wenn course_id nicht NULL ist, ist es valid #TODO
+            #with threading.Lock():
+                #user_store.einschreiben(bid, course_id, enroll_key) #Add owner to course, Fix
+                
+    #user_store.completion()
+    #user_store.close()
 
     # TODO res=result
     return render_template('index.html', mkurse=meine_kurse, vkurse=verf_kurse, bid=bid)
@@ -68,7 +68,7 @@ def new_course(bid):
 def onlineLearn():
 
     try:
-        dbExists = connect.DBUtil().checkDatabaseExistsExternal()
+        dbExists = dao.connect.DBUtil().checkDatabaseExistsExternal()
         if dbExists:
             db2exists = 'vorhanden! Supi!'
         else:

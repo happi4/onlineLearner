@@ -1,4 +1,4 @@
-import benutzer
+import beans.benutzer
 
 class Kurs:
     def __init__(self, name, ersteller, freie_plaetze, beschreibung, schluessel=None):
