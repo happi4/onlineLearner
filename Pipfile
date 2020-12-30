@@ -1,0 +1,14 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+JayDeBeApi = "==1.1.1"
+JPype1 = "==0.6.3"
+Flask = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"

@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <title>Hauptseite</title>
+</head>
+
+<style type="text/css">
+
+
+.meine-kurse, .verf_kurse{
+    color: black;
+    width: 250px;
+    padding: 10;
+    border: 5px solid gray;
+    margin: 10;  
+    text-align: center;
+}
+
+.mbox-kurse, .vbox-kurse{
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+}
+
+.erstellen{
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+    font-size: medium;
+    background-color: #296ff1;
+    color:white;
+    font-size: 20px;
+    transition-duration: 0.4s
+}
+
+.erstellen:hover{
+    background-color: rgb(207, 193, 193);
+    color: rgb(71, 114, 6);
+}
+
+*{
+    font-family: 'Nunito', sans-serif;
+    background: #efe4bf none repeat scroll 0 0;
+}
+
+h1{
+    font-weight: bolder;
+    text-align: center;
+}
+
+h2{
+    font-weight: bold;
+    text-align: left;
+}
+
+
+</style>
+    
+<h1>OnlineLearner</h1>
+<!--TODO: Display Message when Diplicate Found
+{% if res==True %}
+<h3>Duplicate was Found</h3>
+{% endif %}
+-->
+
+<body>
+    <h2>Meine Kurse</h2>
+
+    <div class="mbox-kurse">
+        
+        {% for kurs in mkurse%}
+        <div class="meine-kurse">
+            <p>{{ kurs[0] }}</p>
+            <p>Ersteller: {{ kurs[1] }}</p>
+            <p>Freie Plätze: {{ kurs[2] }}</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+
+    <h2>Verfügbare Kurse</h2>
+
+    <div class="vbox-kurse">
+    
+        {% for kurs in vkurse%}
+        <div class="verf_kurse">
+            <p>{{ kurs[0] }}</p>
+            <p>Ersteller: {{ kurs[1] }}</p>
+            <p>Freie Plätze: {{ kurs[2] }}</p>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <a href="{{url_for('new_course', bid=bid) }}"><button class="erstellen" type="button">Kurs Erstellen</button></a>
+
+
+</body>
+
+</html>
