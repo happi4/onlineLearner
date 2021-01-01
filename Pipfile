@@ -9,6 +9,7 @@ JPype1 = "==0.6.3"
 Flask = "*"
 
 [dev-packages]
+autopep8 = "*"
 
 [requires]
 python_version = "3.9"

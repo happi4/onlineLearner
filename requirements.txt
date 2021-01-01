@@ -1,3 +1,4 @@
+autopep8==1.5.4
 click==7.1.2
 Flask==1.1.2
 itsdangerous==1.1.0
@@ -5,6 +6,10 @@ JayDeBeApi==1.1.1
 Jinja2==2.11.2
 JPype1==0.6.3
 MarkupSafe==1.1.1
+pycodestyle==2.6.0
 python-dotenv==0.15.0
+readerwriterlock==1.0.7
+toml==0.10.2
+typing-extensions==3.7.4.3
 Werkzeug==1.0.1
 wtf==0.1

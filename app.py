@@ -5,6 +5,7 @@ import csv
 import re
 import beans.fach
 import dao.application_dao
+from beans import fach
 
 
 app = Flask(__name__, template_folder='template')
@@ -25,7 +26,8 @@ config = csv_reader("properties.settings")
 @app.route("/<bid>", methods=['GET', 'POST'])
 def index(bid):
     """Erste Seite der Webseite: """
-    user_store = dao.application_dao.ApplicationDao() #User has to be given data
+    user_store = dao.application_dao.ApplicationDao() 
+
     meine_kurse = user_store.get_courses(bid)
     verf_kurse = user_store.get_all_courses()
 
@@ -34,7 +36,7 @@ def index(bid):
         # Form data
         #name = request.form['course_name'] 
         #enroll_key = request.form.get('schluessel')
-        #free_spots = request.form.get('freie_plaetze')  # TODO
+        #free_spots = request.form.get('freie_plaetze')  
         #desc = request.form.get('btext')
         
         #print(name, bid, enroll_key, free_spots, desc)
@@ -62,6 +64,11 @@ def index(bid):
 @app.route("/<bid>/new_course", methods=['POST', 'GET'])
 def new_course(bid):
     return render_template("new_course.html", bid=bid)
+
+
+@app.route("/<bid>/view_course", methods=['POST', 'GET'])
+def view_course(bid):
+    return render_template("view_course.html", bid=bid)
 
 
 @app.route('/onlineLearner', methods=['GET'])

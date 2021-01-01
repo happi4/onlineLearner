@@ -69,7 +69,7 @@ h2{
         
         {% for kurs in mkurse%}
         <div class="meine-kurse">
-            <p>{{ kurs[0] }}</p>
+            <p><a href="{{url_for('view_course', bid=bid)}}">{{ kurs[0] }}</a></p>
             <p>Ersteller: {{ kurs[1] }}</p>
             <p>Freie Plätze: {{ kurs[2] }}</p>
         </div>
