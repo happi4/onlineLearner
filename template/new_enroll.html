@@ -1,0 +1,21 @@
+<html>
+    <head>
+        <title>
+            Kurs Einschreiben
+        </title>
+    </head>
+
+    <body>
+        <div>
+            <form action="{{url_for('index', bid=bid)}}" method='POST'>
+                <!--Course Name-->
+                <p>Einschreibeschlüssel: <input type="text" name="schluessel"/></p> 
+
+                <input type="hidden" name="kname" value="{{ kname }}"/>
+                <input type="hidden" name="ersteller" value="{{ ersteller }}"/>
+
+                <input type="submit" value="Einschreiben" id="write"/>
+            </form>
+        </div>
+    </body>
+</html>

@@ -22,9 +22,9 @@
 }
 
 .erstellen{
-    position: absolute;
+    position: relative;
     bottom: 8px;
-    right: 16px;
+    left: 1100px; /*may be a better way to do this*/
     font-size: medium;
     background-color: #296ff1;
     color:white;
@@ -69,13 +69,22 @@ h2{
         
         {% for kurs in mkurse%}
         <div class="meine-kurse">
-            <p><a href="{{url_for('view_course', bid=bid)}}">{{ kurs[0] }}</a></p>
-            <p>Ersteller: {{ kurs[1] }}</p>
-            <p>Freie Plätze: {{ kurs[2] }}</p>
+            <form action="{{url_for('view_course', bid=bid)}}" method="POST">
+                <p><input type="submit" value="{{ kurs[0] }}"></p>
+                <input type="hidden" name="kname" value="{{ kurs[0] }}"/>
+
+                <p>Ersteller: {{ kurs[1] }}</p>
+                <input type="hidden" name="ersteller" value="{{ kurs[1] }}" />
+
+                <p>Freie Plätze: {{ kurs[2] }}</p>
+                <input type="hidden" name="fp" value="{{ kurs[2] }}" />
+            </form>
         </div>
         {% endfor %}
-
     </div>
+
+        <br>
+        <a href="{{url_for('new_course', bid=bid) }}"><button class="erstellen" type="button">Kurs Erstellen</button></a>
 
 
     <h2>Verfügbare Kurse</h2>
@@ -84,16 +93,19 @@ h2{
     
         {% for kurs in vkurse%}
         <div class="verf_kurse">
-            <p>{{ kurs[0] }}</p>
-            <p>Ersteller: {{ kurs[1] }}</p>
-            <p>Freie Plätze: {{ kurs[2] }}</p>
+            <form action="{{url_for('view_course', bid=bid)}}" method="POST">
+                <p><input type="submit" value="{{ kurs[0] }}"></p>
+                <input type="hidden" name="kname" value="{{ kurs[0] }}" />
+            
+                <p>Ersteller: {{ kurs[1] }}</p>
+                <input type="hidden" name="ersteller" value="{{ kurs[1] }}" />
+            
+                <p>Freie Plätze: {{ kurs[2] }}</p>
+                <input type="hidden" name="fp" value="{{ kurs[2] }}" />
+            </form>
         </div>
         {% endfor %}
-
     </div>
-
-    <a href="{{url_for('new_course', bid=bid) }}"><button class="erstellen" type="button">Kurs Erstellen</button></a>
-
 
 </body>
 

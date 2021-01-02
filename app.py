@@ -29,7 +29,7 @@ def index(bid):
     user_store = dao.application_dao.ApplicationDao() 
 
     meine_kurse = user_store.get_courses(bid)
-    verf_kurse = user_store.get_all_courses()
+    verf_kurse = user_store.get_all_other_courses(bid)
 
     #result = False
     #if request.method == "POST":
@@ -68,7 +68,44 @@ def new_course(bid):
 
 @app.route("/<bid>/view_course", methods=['POST', 'GET'])
 def view_course(bid):
-    return render_template("view_course.html", bid=bid)
+    info_store = dao.application_dao.ApplicationDao()
+    kname = str(request.form.get("kname"))
+    ersteller = str(request.form.get("ersteller"))
+    fp = request.form.get("fp")
+
+    #print(bid)
+
+    #Einschreibeschlüssel, wenn vorhanden
+    reg_key = info_store.get_key(kname, ersteller) 
+
+    #course owner
+    owner = info_store.get_course_owner(kname) 
+
+    desc = info_store.get_course_details(kname, ersteller)
+
+    # Read details for above data from database 
+
+    #course id
+    kid = info_store.get_kid(kname, ersteller)
+    print(kid)
+
+    #Get exercises for kid retieved
+    exercises = info_store.get_ex_list(kid)
+
+    # TODO: Different view for ersteller
+
+
+    return render_template("view_course.html", bid=bid, kname=kname, desc=desc, fp=fp, 
+    ersteller=ersteller, schluessel=reg_key, owner=owner, exercises=exercises)
+
+
+@app.route('/<bid>/new_enroll', methods=['POST', 'GET'])
+def new_enroll(bid):
+    kname = request.form.get("kname")
+    ersteller = request.form.get("ersteller")
+
+
+    return render_template('new_enroll.html', bid=bid, kname=kname, ersteller=ersteller)
 
 
 @app.route('/onlineLearner', methods=['GET'])
@@ -84,6 +121,9 @@ def onlineLearn():
         print(e)
 
     return render_template('onlineLearner.html', db2exists=db2exists, db2name="onlineLearner")
+
+
+
 
 
 if __name__ == "__main__":

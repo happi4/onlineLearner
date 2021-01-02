@@ -5,13 +5,95 @@
         </title>
     </head>
 
+    <style type="text/css">
+        .column{
+            float: right;
+            width: 33.33%;
+        }
+        .columnh{
+            float: center;
+            width: 33.33%;
+        }
+    </style>
+
     <body>
         <p>
             Informationen
         </p>
-        <!--<div class="info">
-            <p>{{ kname }}</p>
-            <p>{{ ersteller }}</p>
-        </div>-->
+
+        {% if owner|int() != bid|int() %}
+        <div class="info_reg">
+            {% if schluessel %}
+            <form action="{{url_for('new_enroll', bid=bid)}}" method='POST'>
+            {% else %}
+            <form action="{{url_for('index', bid=bid)}}" method='POST'>
+            {% endif %}
+
+                <p>{{ kname }}</p>
+                <input type="hidden" name="kname" value="{{ kname }}"/>
+
+                <p>Ersteller: {{ ersteller }}</p>
+                <input type="hidden" name="ersteller" value="{{ ersteller }}"/>
+
+                <p>{{ desc }}</p>
+
+                <p>Anz. freier Plätze: {{ fp }}</p>
+
+                <input type="submit" class="write" value="Einschreiben" />
+                <input type="hidden" name="register" value="True" />
+                
+            </form>
+        </div>
+        {% else %}
+
+        <div class="info_owner">
+            <form action="{{url_for('index', bid=bid)}}" method='POST'>
+                <p>{{ kname }}</p>
+                <input type="hidden" name="kname" value="{{ kname }}" />
+            
+                <p>Ersteller: {{ ersteller }}</p>
+                <input type="hidden" name="ersteller" value="{{ ersteller }}" />
+            
+                <p>{{ desc }}</p>
+            
+                <p>Anz. freier Plätze: {{ fp }}</p>
+            
+                <input type="submit" class="delete" value="Kurs Löschen" />
+                <input type="hidden" name="delete" value="True" />
+
+            <hr>
+
+                <h1 class="header_text">Liste der Aufgaben</h1>
+
+                    <table style="width: 100%">
+
+                        <tr>
+                            <th class="columnh">Aufgabe</th>
+                            <th class="columnh">Meine Abgabe</th>
+                            <th class="columnh">Bewertungsnote</th>
+                        </tr>
+                        
+                        <tr>
+                            {% for exercise in exercises %}
+
+                            <div class="column">
+                            <td>{% if exercise[0] %}{{ exercise[0] }}{% endif %}</td>
+                            </div>
+
+                            <div class="column">
+                            <td>{% if exercise[1] %}{{ exercise[1] }}{% else %} Keine Abgabe{% endif %}</td>
+                            </div>
+
+                            <div class="column">
+                            <td>{% if exercise[2] %}{{ exercise[2] }}{% else %} Noch keine Bewertung{% endif %}</td>
+                            </div>
+
+                        </tr>
+                            {% endfor %}
+                    </table>
+            </form>
+        </div>
+
+        {% endif %}
     </body>
 </html>

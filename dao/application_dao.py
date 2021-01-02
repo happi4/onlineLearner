@@ -26,15 +26,16 @@ class ApplicationDao:
         return res
 
 
-    def get_all_courses(self):
+    def get_all_other_courses(self, bid):
         """Verfügbare Kurse zurückgeben"""
 
         all_courses_curs = self.conn.cursor()
 
         all_courses_query = """select kurs.name, benutzer.name, kurs.freieplaetze from kurs 
-        join benutzer on kurs.ersteller=benutzer.bnummer where kurs.freieplaetze > 0"""
+        join benutzer on kurs.ersteller=benutzer.bnummer where kurs.freieplaetze > 0 and 
+        kurs.ersteller!=?"""
 
-        all_courses_curs.execute(all_courses_query)
+        all_courses_curs.execute(all_courses_query, (bid,))
         res = all_courses_curs.fetchall()
 
         all_courses_curs.close()
@@ -45,7 +46,92 @@ class ApplicationDao:
     def add_course(self, course):
         """Neuer Kurs hinzufügen"""
 
+    def get_course_details(self, kname, ersteller):
+        """Beschreibung eines Kurses zurückliefern"""
 
+        course_details_curs = self.conn.cursor()
+        course_details_query = """select cast(beschreibungstext as varchar(3200)) from kurs 
+        join benutzer on kurs.ersteller=benutzer.bnummer where kurs.name=? and benutzer.name=?"""
+
+
+        course_details_curs.execute(course_details_query, (kname, ersteller))
+        res = course_details_curs.fetchone()[0]
+        #desc = res[0]
+        #kid = res[1]
+        #print(desc, kid)
+        #result = [(desc, kid)]
+    
+        course_details_curs.close()
+
+        if res is None:
+            return " "
+        else:
+            return res
+
+    def get_kid(self, kname, ersteller):
+        """KursID eines Kurses zurückliefern"""
+
+        kid_curs = self.conn.cursor()
+        kid_query = """select kurs.kid from kurs join benutzer 
+        on kurs.ersteller=benutzer.bnummer where kurs.name=? and benutzer.name=?"""
+
+        kid_curs.execute(kid_query, (kname, ersteller))
+        res = kid_curs.fetchone()[0]
+
+        if res is None:
+            return " "
+        else:
+            return res
+
+
+
+    def get_key(self, kname, ersteller):
+        """Kursschlüssel zurückliefern"""
+
+        reg_key_curs = self.conn.cursor()
+        reg_key_query = """select einschreibeschluessel from kurs join benutzer 
+        on kurs.ersteller=benutzer.bnummer where kurs.name=? and benutzer.name=?"""
+
+        reg_key_curs.execute(reg_key_query, (kname, ersteller))
+        reg_key = reg_key_curs.fetchone()[0]
+        reg_key_curs.close()
+
+        #print(reg_key)
+
+        return reg_key
+
+    def get_course_owner(self, kname):
+        """Id des Erstellers eines Kurses zurückliefern"""
+
+        owner_curs = self.conn.cursor()
+        owner_query = """select ersteller from kurs where name=?"""
+        owner_curs.execute(owner_query, (kname,))
+        owner = owner_curs.fetchone()[0]
+
+        #print(owner)
+
+        return owner
+
+    def get_ex_list(self, kid):
+
+        ex_list_curs = self.conn.cursor()
+        ex_list_query = """select distinct aufgabe.name, cast(abgabe.abgabetext as varchar(1000)), 
+        cast(avg(cast(bewerten.note as decimal(2,1))) as decimal(2,1)) from kurs 
+        join aufgabe on aufgabe.kid=kurs.kid left join einreichen 
+        on einreichen.anummer=aufgabe.anummer right join abgabe 
+        on abgabe.aid=einreichen.aid join bewerten on bewerten.aid=abgabe.aid 
+        where kurs.kid=? group by aufgabe.name, cast(abgabe.abgabetext as varchar(1000))
+        order by aufgabe.name, cast(abgabe.abgabetext as varchar(1000))"""
+
+        ex_list_curs.execute(ex_list_query, (kid,))
+
+        res = ex_list_curs.fetchall()
+
+        if len(res) == 0:
+            return "   " #Empty list
+        else:
+            return res
+    
 
     #TODO: Break this method down
     def enroll(self, kname, bnummer, schluessel=None):
