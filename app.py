@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, flash
 import dao.connect
 import threading
 import csv
@@ -9,6 +9,7 @@ from beans import fach
 
 
 app = Flask(__name__, template_folder='template')
+app.secret_key = b'hdgsJ%82/"*dbh#'
 
 
 def csv_reader(path):
@@ -28,7 +29,7 @@ def index(bid):
     """Erste Seite der Webseite: """
     user_store = dao.application_dao.ApplicationDao() 
 
-    meine_kurse = user_store.get_courses(bid)
+    meine_kurse = user_store.get_my_courses(bid)
     verf_kurse = user_store.get_all_other_courses(bid)
 
     #result = False
@@ -75,11 +76,12 @@ def view_course(bid):
 
     #print(bid)
 
-    #Einschreibeschlüssel, wenn vorhanden
+    #Einschreibeschlüssel, wenn vorhanden. Wird benutzt zu prüfen, ob ein Schlüssel stimmt
     reg_key = info_store.get_key(kname, ersteller) 
 
     #course owner
     owner = info_store.get_course_owner(kname) 
+    #print(owner)
 
     desc = info_store.get_course_details(kname, ersteller)
 
@@ -87,16 +89,28 @@ def view_course(bid):
 
     #course id
     kid = info_store.get_kid(kname, ersteller)
-    print(kid)
+
+    #print(ersteller)
+    #print(kid)
+    #print(bid)
+
+    #check resgistrstion status. Returns True or False
+    registered = info_store.is_registered(bid, kid)
+
+    #print(bid, kid)
+    #print(registered)
+
+    exercises = None
 
     #Get exercises for kid retieved
-    exercises = info_store.get_ex_list(kid)
+    exercises = info_store.get_ex_list(kid, int(bid))
 
     # TODO: Different view for ersteller
 
 
     return render_template("view_course.html", bid=bid, kname=kname, desc=desc, fp=fp, 
-    ersteller=ersteller, schluessel=reg_key, owner=owner, exercises=exercises)
+    ersteller=ersteller, schluessel=reg_key, owner=owner, exercises=exercises, 
+    registered=registered, kid=kid)
 
 
 @app.route('/<bid>/new_enroll', methods=['POST', 'GET'])
@@ -106,6 +120,34 @@ def new_enroll(bid):
 
 
     return render_template('new_enroll.html', bid=bid, kname=kname, ersteller=ersteller)
+
+
+@app.route('/<bid>/new_assignment', methods=['POST', 'GET'])
+def new_assignment(bid):
+
+    store_submission = dao.application_dao.ApplicationDao()
+        
+    kid = request.form.get('kid')
+
+    anummer = request.form.get('anummer')
+
+    kname = request.form.get('kname')
+
+    ex_name = request.form.get('ex_name')
+
+
+    #TODO: decription
+    #desc = store_submission.get_ex_details(kid, anummer)
+
+
+    #print(bid, kid, anummer)
+
+    #Submissions should be done only once: TODO: Is defective
+    #is_duplicate = store_submission.submission_exists(bid, kid, anummer)
+
+    #print(is_duplicate) TODO
+
+    return render_template('new_assignment.html', kname=kname, ex_name=ex_name)
 
 
 @app.route('/onlineLearner', methods=['GET'])

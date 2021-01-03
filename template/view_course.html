@@ -6,10 +6,10 @@
     </head>
 
     <style type="text/css">
-        .column{
+        /*.column{
             float: right;
             width: 33.33%;
-        }
+        }*/
         .columnh{
             float: center;
             width: 33.33%;
@@ -21,7 +21,7 @@
             Informationen
         </p>
 
-        {% if owner|int() != bid|int() %}
+        {% if not registered %}
         <div class="info_reg">
             {% if schluessel %}
             <form action="{{url_for('new_enroll', bid=bid)}}" method='POST'>
@@ -44,7 +44,7 @@
                 
             </form>
         </div>
-        {% else %}
+        {% elif owner|int() == bid|int() or registered %}
 
         <div class="info_owner">
             <form action="{{url_for('index', bid=bid)}}" method='POST'>
@@ -60,38 +60,50 @@
             
                 <input type="submit" class="delete" value="Kurs Löschen" />
                 <input type="hidden" name="delete" value="True" />
+            </form
 
-            <hr>
 
-                <h1 class="header_text">Liste der Aufgaben</h1>
 
-                    <table style="width: 100%">
+            <h1>Liste der Aufgaben</h1>
 
-                        <tr>
-                            <th class="columnh">Aufgabe</th>
-                            <th class="columnh">Meine Abgabe</th>
-                            <th class="columnh">Bewertungsnote</th>
-                        </tr>
+                <table style="width: 100%">
+
+                    <tr>
+                        <th class="columnh">Aufgabe</th>
+                        <th class="columnh">Meine Abgabe</th>
+                        <th class="columnh">Bewertungsnote</th>
+                    </tr>
                         
-                        <tr>
-                            {% for exercise in exercises %}
+                    <tr>
+                        {% for exercise in exercises %}
+
+                        <form action="{{url_for('new_assignment', bid=bid)}}" method="POST">
 
                             <div class="column">
-                            <td>{% if exercise[0] %}{{ exercise[0] }}{% endif %}</td>
+                            <td><input type="submit" class="posting" name="aname" value="{% if exercise[1] %}{{ exercise[1] }}{% endif %}"></input></td>
+                            <input type="hidden" name="ex_name" value="{{ exercise[1] }}"/>
+
+                            <input type="hidden" name="kname" value="{{ kname }}" />
+
+                            <input type="hidden" name="anummer" value="{{ exercise[0] }}" />
+                            <input type="hidden" name="kid" value="{{ kid }}" />
+
                             </div>
 
                             <div class="column">
-                            <td>{% if exercise[1] %}{{ exercise[1] }}{% else %} Keine Abgabe{% endif %}</td>
+                            <td>{% if exercise[2] %}{{ exercise[2] }}{% else %} Keine Abgabe{% endif %}</td>
+                            <!--<input type="hidden" name="desc" value="{{ exercise[2] }}"/>-->
                             </div>
 
                             <div class="column">
-                            <td>{% if exercise[2] %}{{ exercise[2] }}{% else %} Noch keine Bewertung{% endif %}</td>
+                            <td>{% if exercise[3] %}{{ exercise[3] }}{% else %} Noch keine Bewertung{% endif %}</td>
                             </div>
+                                
+                        </form>
 
-                        </tr>
-                            {% endfor %}
-                    </table>
-            </form>
+                    </tr>
+                        {% endfor %}
+                </table>
         </div>
 
         {% endif %}

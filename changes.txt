@@ -1,0 +1,1 @@
+Trigger created to decrement free spaces for a course on entry
