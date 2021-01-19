@@ -1,18 +1,33 @@
-<html>
-    <head>
-        <title>Kurs Erstellen</title>
-    </head>
 
-    <h1>Kurse erstellen</h1>
+{% extends "base.html" %}
 
+{% block title %} {{ title }} {% endblock %}
 
-    <form name="course" action="{{ url_for('index', bid=bid) }}" method="POST">
-        <div class="in">Name<input type="text" name="course_name" required/></div>
-        <div class="in">Einschreibungsschlüssel<input type="text" name="schluessel"/></div>
-        <div class="in">Anzahl freie Plätze<input type="number" name="freie_plaetze" min="1" max="100" value="50" required></div>
-        <div class="in">Beschreibungstext<input type="textarea" name="btext" required/></div>
-        <input type="submit" class="submit" value="Erstellen"/>
+{% block head %}
+    {{ super() }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ title }}</h1>
+
+    <form class="new_course_form" name="new_course" action="" method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.name.label }}  {{ form.name(class="new_course", size=50) }} <br><br>
+
+            {{ form.key.label }}  {{ form.key(class="new_course") }} <br><br>
+
+            {{ form.spaces.label }}  {{ form.spaces(class="new_course") }} <br><br>
+
+            {{ form.desc.label }}  {{ form.desc(cols="30", rows="10", class="new_course") }} <br><br>
+
+            {{ form.submit(class="erstellen") }}
+
+        </p>
+        
     </form>
-
-
-</html>
+    
+{% endblock %}

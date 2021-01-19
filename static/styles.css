@@ -1,0 +1,86 @@
+*{
+   margin: 0;
+   padding: 0;
+}
+ body{
+    margin-left: 30;
+    margin-bottom: 30;
+ }
+
+.home{
+    padding: 2%;
+ }
+
+ p{
+    padding: 2%;
+ }
+.meine-kurse, .verf_kurse{
+    color: rgb(4, 27, 61);
+    width: 270;
+    height: 165;
+    border: 5px solid rgb(182, 195, 197); 
+    text-align: center;
+    padding-top: 10px;
+    margin-top: 20px;
+    
+}
+
+.mbox-kurse, .vbox-kurse{
+    display: grid;
+    grid-template-columns: repeat(4, 25%);
+}
+
+.erstellen{
+    position: relative;
+    bottom: 8px;
+    left: 1000px; /*may be a better way to do this*/
+    font-size: medium;
+    background-color: #6dbbf0;
+    color:rgb(11, 19, 19);
+    font-size: 20px;
+    border-radius: 16px;
+    border-color: rgb(0, 0, 0);
+    transition-duration: 0.4s;
+    padding: 1%;
+}
+
+.erstellen:hover{
+    background-color: rgb(182, 250, 202);
+    color: rgb(0, 0, 0);
+}
+
+*{
+    font-family: 'Nunito', sans-serif;
+    background: #efe4bf none repeat scroll 0 0;
+}
+
+h1{
+    font-weight: bolder;
+    text-align: center;
+    padding: 50px;
+}
+
+h2{
+    font-weight: bold;
+    text-align: left;
+    padding: 25px;
+}
+.new_course_form{
+    align-content: center;
+}
+.new_course{
+    align-content: flex-start;
+}
+
+.columnh{
+            float: center;
+            width: 33.33%;
+}
+
+td{
+    padding-top: 20px;
+}
+
+.column{
+    align-content: center;
+}

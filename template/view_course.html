@@ -1,68 +1,109 @@
-<html>
-    <head>
-        <title>
-            Kurs Details
-        </title>
-    </head>
+{% extends "base.html" %}
 
-    <style type="text/css">
-        /*.column{
-            float: right;
-            width: 33.33%;
-        }*/
-        .columnh{
-            float: center;
-            width: 33.33%;
-        }
-    </style>
+{% block title %} {{ title }} {% endblock %}
 
-    <body>
-        <p>
-            Informationen
-        </p>
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+    <h1>{{ title }}</h1>
+
+        <h2>Informationen</h2>
 
         {% if not registered %}
-        <div class="info_reg">
-            {% if schluessel %}
-            <form action="{{url_for('new_enroll', bid=bid)}}" method='POST'>
+
+        <div class="not_reg">
+
+            {% if kurs[6] %} <!--schluessel-->
+
+            <form action="{{url_for('new_enroll', bid=bid, kid=kurs[3])}}" method='POST'>
+
             {% else %}
-            <form action="{{url_for('index', bid=bid)}}" method='POST'>
+
+            <form action="" method='POST'>
+
             {% endif %}
 
-                <p>{{ kname }}</p>
-                <input type="hidden" name="kname" value="{{ kname }}"/>
+                <p>{{ kurs[0] }}</p>
 
-                <p>Ersteller: {{ ersteller }}</p>
-                <input type="hidden" name="ersteller" value="{{ ersteller }}"/>
+                <p>Ersteller: {{ kurs[1] }}</p>
 
-                <p>{{ desc }}</p>
+                <p>{{ kurs[5] }}</p>
 
-                <p>Anz. freier Plätze: {{ fp }}</p>
+                <p>Anz. freier Plätze: {{ kurs[2] }}</p>
 
-                <input type="submit" class="write" value="Einschreiben" />
-                <input type="hidden" name="register" value="True" />
+                <!--Submit button-->
+                <p>{{ form.submit(value="Einschreiben") }}</p>
+
+                <p class="hidden_values">
+
+                    {{ form.course_name(value=kurs[0]) }}
+
+                    {{ form.creator_name(value=kurs[1]) }}
+                
+                    {{ form.spaces(value=kurs[2]) }}
+                
+                    {{ form.course_id(value=kurs[3]) }}
+                
+                    {{ form.creator_id(value=kurs[4]) }}
+                
+                    {{ form.desc(value=kurs[5]) }}
+                
+                    {{ form.key(value=kurs[6]) }}
+
+                    {{ form.status(value="register") }} <!--Stores the state-->
+
+                </p>
                 
             </form>
+
         </div>
-        {% elif owner|int() == bid|int() or registered %}
 
-        <div class="info_owner">
-            <form action="{{url_for('index', bid=bid)}}" method='POST'>
-                <p>{{ kname }}</p>
-                <input type="hidden" name="kname" value="{{ kname }}" />
-            
-                <p>Ersteller: {{ ersteller }}</p>
-                <input type="hidden" name="ersteller" value="{{ ersteller }}" />
-            
-                <p>{{ desc }}</p>
-            
-                <p>Anz. freier Plätze: {{ fp }}</p>
-            
-                <input type="submit" class="delete" value="Kurs Löschen" />
-                <input type="hidden" name="delete" value="True" />
-            </form
+        {% elif kurs[4]|int() == bid|int() or registered %} <!--ersteller_id-->
 
+        <div class="reg">
+            {% if kurs[4]|int() == bid|int() %}
+            <form action="{{ url_for('delete', bid=bid, kid=kid) }}" method='POST'>
+            {% else %}
+            <form action="{{ url_for('delete', bid=bid, kid=kid) }}" method='POST'>
+            {% endif %}
 
+                <p>{{ kurs[0] }}</p>
+                
+                <p>Ersteller: {{ kurs[1] }}</p>
+                
+                <p>{{ kurs[5] }}</p>
+                
+                <p>Anz. freier Plätze: {{ kurs[2] }}</p>
+
+                <p class="hidden_values">
+
+                    <!--Submit button-->
+                    <p>{{ form.submit(value="Löschen") }}</p>
+
+                    {{ form.course_name(value=kurs[0]) }}
+        
+                    {{ form.creator_name(value=kurs[1]) }}
+                
+                    {{ form.spaces(value=kurs[2]) }}
+                
+                    {{ form.course_id(value=kurs[3]) }}
+                
+                    {{ form.creator_id(value=kurs[4]) }}
+                
+                    {{ form.desc(value=kurs[5]) }}
+                
+                    {{ form.key(value=kurs[6]) }}
+
+                    {{ form.status(value="delete")}} <!--Stores the state-->
+
+                </p>
+
+            </form>
+
+            <hr>
 
             <h1>Liste der Aufgaben</h1>
 
@@ -74,38 +115,64 @@
                         <th class="columnh">Bewertungsnote</th>
                     </tr>
                         
+                    <!--{% if exercises %}-->
+
+
                     <tr>
                         {% for exercise in exercises %}
-
+                        
+                        {% if exercise[2] %} <!--Es gibt eine Abgabe-->
+                        <form name="resubmission" action="" method="POST">
+                        {% else %}
                         <form action="{{url_for('new_assignment', bid=bid)}}" method="POST">
+                        {% endif %}
 
                             <div class="column">
-                            <td><input type="submit" class="posting" name="aname" value="{% if exercise[1] %}{{ exercise[1] }}{% endif %}"></input></td>
-                            <input type="hidden" name="ex_name" value="{{ exercise[1] }}"/>
 
-                            <input type="hidden" name="kname" value="{{ kname }}" />
+                            <td>{{ form_ex.ex_name(value=exercise[1]) }}
 
-                            <input type="hidden" name="anummer" value="{{ exercise[0] }}" />
-                            <input type="hidden" name="kid" value="{{ kid }}" />
+                                {{ form_ex.ex_name_hidden(value=exercise[1]) }}
+
+                                {{ form_ex.course_name(value=kurs[0])}}
+                                
+                                {{ form_ex.ex_id(value=exercise[0] )}}
+                            </td>
 
                             </div>
 
                             <div class="column">
-                            <td>{% if exercise[2] %}{{ exercise[2] }}{% else %} Keine Abgabe{% endif %}</td>
-                            <!--<input type="hidden" name="desc" value="{{ exercise[2] }}"/>-->
+
+                                <td>{% if exercise[2] %}{{ exercise[2] }}{% else %} Keine Abgabe {% endif %}</td>
+                            
                             </div>
 
                             <div class="column">
-                            <td>{% if exercise[3] %}{{ exercise[3] }}{% else %} Noch keine Bewertung{% endif %}</td>
+
+                                <td>{% if exercise[3] %}{{ exercise[3] }}{% else %} Noch keine Bewertung{% endif %}</td>
+                            
                             </div>
+
+                            <p>
+
+                                {% if exercise[2] %}{{ form_ex.submission(value=exercise[2]) }}{% endif %}
+
+                                {% if exercise[3] %}{{ form_ex.score(value=exercise[3])}}{% endif %}
+
+                                {{ form_ex.course_id(value=kid)}}
+
+                            </p>
                                 
                         </form>
 
                     </tr>
+
                         {% endfor %}
+                    
+                    <!--{% endif %}-->
+
                 </table>
         </div>
 
         {% endif %}
-    </body>
-</html>
+
+{% endblock %}

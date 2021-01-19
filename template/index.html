@@ -1,90 +1,60 @@
-<html>
 
-<head>
-    <title>Hauptseite</title>
-</head>
+{% extends "base.html" %}
 
-<style type="text/css">
+{% block title %} {{ title }} {% endblock %}
 
+{% block head %}
+{{ super() }}
+{% endblock %}
 
-.meine-kurse, .verf_kurse{
-    color: black;
-    width: 250px;
-    padding: 10;
-    border: 5px solid gray;
-    margin: 10;  
-    text-align: center;
-}
-
-.mbox-kurse, .vbox-kurse{
-    display: grid;
-    grid-template-columns: repeat(4, 25%);
-}
-
-.erstellen{
-    position: relative;
-    bottom: 8px;
-    left: 1100px; /*may be a better way to do this*/
-    font-size: medium;
-    background-color: #296ff1;
-    color:white;
-    font-size: 20px;
-    transition-duration: 0.4s
-}
-
-.erstellen:hover{
-    background-color: rgb(207, 193, 193);
-    color: rgb(71, 114, 6);
-}
-
-*{
-    font-family: 'Nunito', sans-serif;
-    background: #efe4bf none repeat scroll 0 0;
-}
-
-h1{
-    font-weight: bolder;
-    text-align: center;
-}
-
-h2{
-    font-weight: bold;
-    text-align: left;
-}
-
-
-</style>
+{% block content %}
     
-<h1>OnlineLearner</h1>
-<!--TODO: Display Message when Diplicate Found
-{% if res==True %}
-<h3>Duplicate was Found</h3>
-{% endif %}
--->
+    <h1>OnlineLearner</h1>
 
-<body>
     <h2>Meine Kurse</h2>
 
     <div class="mbox-kurse">
         
         {% for kurs in mkurse%}
+
         <div class="meine-kurse">
-            <form action="{{url_for('view_course', bid=bid)}}" method="POST">
-                <p><input type="submit" value="{{ kurs[0] }}"></p>
-                <input type="hidden" name="kname" value="{{ kurs[0] }}"/>
 
-                <p>Ersteller: {{ kurs[1] }}</p>
-                <input type="hidden" name="ersteller" value="{{ kurs[1] }}" />
+            <form action="{{url_for('view_course', bid=bid, kid=kurs[3])}}" method="POST">
 
-                <p>Freie Plätze: {{ kurs[2] }}</p>
-                <input type="hidden" name="fp" value="{{ kurs[2] }}" />
+                <p>{{ form.course_name_sub(value=kurs[0], class="home") }}</p>
+
+                <p class="home">Ersteller: {{ kurs[1] }}</p>
+
+                <p class="home">Freie Plätze: {{ kurs[2] }}</p>
+
+                <!--<p>{{ kurs[3] }}</p>-->
+
+                <p>{{ form.course_name(value=kurs[0], class="home") }}</p>
+
+                <p>{{ form.creator_name(value=kurs[1]) }}</p>
+
+                <p>{{ form.spaces(value=kurs[2]) }}</p>
+
+                <p>{{ form.course_id(value=kurs[3]) }}</p>
+
+                <p>{{ form.creator_id(value=kurs[4]) }}</p>
+
+                <p>{{ form.desc(value=kurs[5]) }}</p>
+
+                <p>{{ form.key(value=kurs[6]) }}</p>
+
             </form>
+
         </div>
+
         {% endfor %}
+
     </div>
 
         <br>
-        <a href="{{url_for('new_course', bid=bid) }}"><button class="erstellen" type="button">Kurs Erstellen</button></a>
+        <a href="{{url_for('new_course', bid=bid) }}">
+            <button class="erstellen" type="button">Kurs Erstellen</button>
+        </a>
 
 
     <h2>Verfügbare Kurse</h2>
@@ -92,21 +62,39 @@ h2{
     <div class="vbox-kurse">
     
         {% for kurs in vkurse%}
+
         <div class="verf_kurse">
-            <form action="{{url_for('view_course', bid=bid)}}" method="POST">
-                <p><input type="submit" value="{{ kurs[0] }}"></p>
-                <input type="hidden" name="kname" value="{{ kurs[0] }}" />
-            
-                <p>Ersteller: {{ kurs[1] }}</p>
-                <input type="hidden" name="ersteller" value="{{ kurs[1] }}" />
-            
-                <p>Freie Plätze: {{ kurs[2] }}</p>
-                <input type="hidden" name="fp" value="{{ kurs[2] }}" />
+
+            <form action="{{url_for('view_course', bid=bid, kid=kurs[3])}}" method="POST">
+
+                <p>{{ form.course_name_sub(value=kurs[0], class="home") }}</p>
+                
+                <p class="home">Ersteller: {{ kurs[1] }}</p>
+                
+                <p class="home">Freie Plätze: {{ kurs[2] }}</p>
+
+                <p>{{ form.course_name(value=kurs[0]) }}</p>
+                
+                <p>{{ form.creator_name(value=kurs[1]) }}</p>
+                
+                <p>{{ form.spaces(value=kurs[2]) }}</p>
+                
+                <p>{{ form.course_id(value=kurs[3]) }}</p>
+                
+                <p>{{ form.creator_id(value=kurs[4]) }}</p>
+                
+                <p>{{ form.desc(value=kurs[5]) }}</p>
+                
+                <p>{{ form.key(value=kurs[6]) }}</p>
+
             </form>
+
         </div>
+
         {% endfor %}
+
     </div>
 
-</body>
+{% endblock %}
 
-</html>
+{% block homepage %}{% endblock %}

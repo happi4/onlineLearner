@@ -1,21 +1,39 @@
-<html>
-    <head>
-        <title>
-            Abgabe einreichen
-        </title>
-    </head>
+{% extends "base.html" %}
 
-    <body>
-        <form action="{{url_for('view_course', bid=bid)}}">
-            <div>Kurs: </div>
-            <div>{{ kname }}</div>
-            <div>Aufgabe: </div>
-            <div>{{ ex_name }}</div>
+{% block title %} {{ title }} {% endblock %}
 
-            <br>
-            <br>
-            <div>Abgabetext</div>
-            <div><textarea name="submission"></textarea></div>
+{% block head %}
+{{ super() }}
+{% endblock %}
+
+{% block content %}
+
+        <form action="" method="POST">
+
+            <div>
+
+                <div class="col"> Kurs </div>
+                <div class="col">{{ course_name }}</div>
+
+                <div class="col"> Aufgabe </div>
+                <div class="col">{{ ex_name }}</div> <br>
+
+                <div class="col">{{ form.sub_text.label }}</div> 
+                <div class="col">{{ form.sub_text(cols="30", rows="10", class="new_sub") }}</div>
+
+                {{ form.ex_name(value=ex_name)}}
+
+                {{ form.course_name(value=course_name)}}
+
+                {{ form.course_id(value=kid) }}
+
+                {{ form.user_id(value=bid) }}
+
+                {{ form.ex_id(value=anummer) }}
+
+                {{ form.submit()}}
+
+            </div>
         </form>
-    </body>
-</html>
+
+{% endblock %}

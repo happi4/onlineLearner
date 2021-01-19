@@ -1,21 +1,24 @@
-<html>
-    <head>
-        <title>
-            Kurs Einschreiben
-        </title>
-    </head>
+{% extends "base.html" %}
 
-    <body>
-        <div>
-            <form action="{{url_for('index', bid=bid)}}" method='POST'>
-                <!--Course Name-->
-                <p>Einschreibeschlüssel: <input type="text" name="schluessel"/></p> 
+{% block title %} Kurs Einschreiben {% endblock %}
 
-                <input type="hidden" name="kname" value="{{ kname }}"/>
-                <input type="hidden" name="ersteller" value="{{ ersteller }}"/>
+{% block head %}
+    {{ super() }}
+{% endblock %}
 
-                <input type="submit" value="Einschreiben" id="write"/>
-            </form>
-        </div>
-    </body>
-</html>
+{% block content %}
+
+    <h2>{{ kname }}</h2>
+    
+    <form name="new_enroll" action="" method='POST'>
+
+        {{ form.hidden_tag() }}
+
+        <p>
+            {{ form.key.label }} {{ form.key() }} <br><br>
+
+            {{ form.submit() }}
+        </p> 
+    </form>
+
+{% endblock %}
