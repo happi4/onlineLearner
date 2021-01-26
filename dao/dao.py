@@ -118,7 +118,7 @@ class Dao:
         ex_list_curs = self.conn.cursor()
         res = []
         try:
-            ex_list_curs.execute(queries.exercises, (kid, bid, kid, bid))
+            ex_list_curs.execute(queries.exercises, (kid, bid))
             res = ex_list_curs.fetchall()
             #self.completion()
         except Exception as e:

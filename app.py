@@ -95,7 +95,7 @@ def view_course(bid, kid):
     # form has been posted and submission exists
     if request.form.get("submission"):
         flash("Das neues Einreichen ist nicht möglich")
-        return redirect(url_for('index', bid=bid))
+        return redirect(url_for('view_course', bid=bid, kid=kid))
 
     #Einschreiben ohne Schlüssel
     if request.method == 'POST' and request.form.get('status') == 'register': #status code for registration
@@ -173,7 +173,7 @@ def new_assignment(bid):
             flash("Submission has been registered successfully")
         else:
             flash("Failed to submit your work")
-        return redirect(url_for("view_course", bid=bid))
+        return redirect(url_for("view_course", bid=bid, kid=kid))
 
         
     #kid = request.form.get('kid')
