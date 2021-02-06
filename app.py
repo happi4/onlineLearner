@@ -119,9 +119,6 @@ def new_enroll(bid, kid):
     form = forms.EnrollmentForm(request.form)
     kname = form.course_name.data
     print(kname, kid)
-
-    # status code
-    #if request.method == 'POST' and course.get_course_key(kid) is None and request.form.get('status') == 'register':
         
     if form.validate_on_submit():
         status = course.add_to_locked_course(bid, kid, form.key.data)
@@ -174,27 +171,6 @@ def new_assignment(bid):
         else:
             flash("Failed to submit your work")
         return redirect(url_for("view_course", bid=bid, kid=kid))
-
-        
-    #kid = request.form.get('kid')
-
-    #anummer = request.form.get('anummer')
-
-    #kname = request.form.get('kname')
-
-    #ex_name = request.form.get('ex_name')
-
-
-    #TODO: decription
-    #desc = store_submission.get_ex_details(kid, anummer)
-
-
-    #print(bid, kid, anummer)
-
-    #Submissions should be done only once: TODO: Is defective
-    #is_duplicate = store_submission.submission_exists(bid, kid, anummer)
-
-    #print(is_duplicate) TODO
 
     return render_template('new_assignment.html', ex_name=ex_name, form=form, title=title, 
     course_name=course_name, anummer=anummer, kid=kid)

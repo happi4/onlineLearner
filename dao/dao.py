@@ -1,5 +1,4 @@
-import dao.connect 
-from readerwriterlock import rwlock
+import dao.connect
 import traceback
 import dao.queries as queries
 
@@ -19,20 +18,20 @@ import dao.queries as queries
 # Use it to create an object
 #print(java.sql.Timestamp(1515628800*1000))
 
-# SQL Queries
-
-
 class Dao:
-    """Data Access Object"""
+    """
+    Data Access Object
+    """
 
-    def __init__(self): # Done
+    def __init__(self):
         self.conn = dao.connect.DBUtil().getExternalConnection()
         self.conn.jconn.setAutoCommit(False)
         self.complete = None
-        #self.pencil = rwlock.RWLockFair()
-
-    def get_my_courses(self, bid): # Done
-        """Kurse eines bestimmten Benutzer zurückgeben"""
+        
+    def get_my_courses(self, bid):
+        """
+        Kurse eines bestimmten Benutzer zurückgeben
+        """
         course_curs = self.conn.cursor()
         res = [] 
         try:
@@ -46,8 +45,10 @@ class Dao:
         return sorted(res)
 
 
-    def get_available_courses(self, bid): # Done
-        """Verfügbare Kurse zurückgeben"""
+    def get_available_courses(self, bid):
+        """
+        Verfügbare Kurse zurückgeben
+        """
         all_other_courses_curs = self.conn.cursor()
         res = []
         try:
@@ -62,7 +63,7 @@ class Dao:
         return sorted(res)
 
 
-    def add_course(self, name, desc, spaces, creator, key=None): # Done
+    def add_course(self, name, desc, spaces, creator, key=None):
         """Kurs erstellen"""
         add_course_curs = self.conn.cursor()
         error = None
@@ -82,8 +83,10 @@ class Dao:
             self.close()
         return error
 
-    def is_registered(self, bid, kid): # Done
-        """Prüfen, ob ein Benutzer registriert ist"""
+    def is_registered(self, bid, kid):
+        """
+        Prüfen, ob ein Benutzer registriert ist
+        """
         reg_curs = self.conn.cursor()
         try:
             reg_curs.execute(queries.is_reg, (bid, kid))
@@ -99,8 +102,10 @@ class Dao:
         else:
             return True
 
-    def get_course_details(self, kid): # Done
-        """Beschreibung eines Kurses zurückliefern"""
+    def get_course_details(self, kid):
+        """
+        Beschreibung eines Kurses zurückliefern
+        """
         course_details_curs = self.conn.cursor()
         try:
             course_details_curs.execute(queries.course_details, (kid,))
@@ -114,7 +119,9 @@ class Dao:
         return res
 
     def get_exercises(self, kid, bid): #no commit, TODO
-        """Aufgaben und zugehörige Abgaben (wenn vorhanden) zurückliefern"""
+        """
+        Aufgaben und zugehörige Abgaben (wenn vorhanden) zurückliefern
+        """
         ex_list_curs = self.conn.cursor()
         res = []
         try:
@@ -127,91 +134,11 @@ class Dao:
             ex_list_curs.close()
         return res
 
-
-    def get_ex_details(self, kid, anummer): #  Done
-        """Details für Aufgaben zurückgeben"""
-
-        desc_curs = self.conn.cursor()
-        desc_query = """select cast(beschreibung as varchar(500)) from aufgabe kid=? and 
-        anummer=?"""
-
-        desc_curs.execute(desc_query, (kid, anummer))
-
-        res = desc_curs.fetchone()
-
-        res = res[0]
-
-        if res is None:
-            return None
-        else:
-            return res 
-
-
-    def get_kid(self, kname, ersteller): #change to bnummer
-        """KursID eines Kurses zurückliefern"""
-
-        kid_curs = self.conn.cursor()
-        kid_query = """select kurs.kid from kurs join benutzer 
-        on kurs.ersteller=benutzer.bnummer where kurs.name=? and benutzer.name=?"""
-
-        kid_curs.execute(kid_query, (kname, ersteller))
-        res = kid_curs.fetchone()
-        kid_curs.close()
-
-        if res is None:
-            return None
-        else:
-            #print(res[0])
-            return res[0]
-
-
-    def get_key(self, kname, ersteller):  # No longer used
-        """Kursschlüssel zurückliefern"""
-
-        reg_key_curs = self.conn.cursor()
-        reg_key_query = """select einschreibeschluessel from kurs join benutzer 
-        on kurs.ersteller=benutzer.bnummer where kurs.name=? and benutzer.name=?"""
-
-        reg_key_curs.execute(reg_key_query, (kname, ersteller))
-        reg_key = reg_key_curs.fetchone()
-        if reg_key is None:
-            return None
-        else:
-            #print(reg_key[0])
-            return reg_key[0]
-        reg_key_curs.close()
-
- 
-    def get_course_owner(self, kname):  # No longer used
-        """Id des Erstellers eines Kurses zurückliefern. wir gehen davon aus, dass
-        jede Benutzer nur einen Kurs derselben Namen erstellen kann"""
-
-        owner_curs = self.conn.cursor()
-        owner_query = """select ersteller from kurs where name=?"""
-        owner_curs.execute(owner_query, (kname,))
-        owner = owner_curs.fetchone()[0]
-
-        #print(owner)
-
-        return owner
-
-    def get_course_key(self, kid):  # Query to be added to queries
-        """Einschreibeschlüssel für einen Kurs zurückliefern"""
-        get_key_query = """select einschreibeschluessel from kurs where kid=?"""
-        get_key_curs = self.conn.cursor()
-
-        get_key_curs.execute(get_key_query, (kid,))
-        res = get_key_curs.fetchone()
-        return res[0]
-
-
-    def add_to_locked_course(self, bnummer, kid, key=None): # Query to be added to queries
+    def add_to_locked_course(self, bnummer, kid, key=None):
         """
         Ein Benutzer schreibt sich ein, der Kurs enthält einen Schlüssel
         """
-
         add_to_course_curs = self.conn.cursor()
-
         print(key, self.get_course_key(kid))
 
         if (key == self.get_course_key(kid)):
@@ -246,35 +173,11 @@ class Dao:
             self.close()
         return True
 
-
-
-    def submission_exists(self, bid, kid, anummer): # No longer used
-        """Prüfen, ob eine Abgabe für ein bnummer, kid und anummer schon existiert"""
-        #sub_exists_lock = self.pencil.gen_rlock()
-
-        sub_exists = 1
-
-        sub_exists_curs = self.conn.cursor()
-        sub_exists_query = """"select count(*) from einreichen where bnummer=? and kid=? and 
-        anummer=?"""
-
-        #with sub_exists_lock:
-        sub_exists_curs.execute(sub_exists_query, (bid, kid, anummer))
-        sub_exists = sub_exists_curs.fetchone()[0]
-
-        sub_exists_curs.close()
-        
-        print(sub_exists)
-        
-        if sub_exists == 0:
-            return True
-        else:
-            return False
-
-    def add_sub_text(self, text): # Done
-        """Abgabe in Datenbank hinzufügen"""
+    def add_sub_text(self, text):
+        """
+        Abgabe in der Datenbank hinzufügen
+        """
         sub_text_curs = self.conn.cursor()
-
         try:
             sub_text_curs.execute(queries.sub_text, (text,))
             self.conn.commit
@@ -283,28 +186,27 @@ class Dao:
             self.conn.rollback()
         finally:
             sub_text_curs.close()
-            #self.close()
         return True
 
-    def get_aid(self, text): # Done
-        """Aufgabe id zurückliefern"""
+    def get_aid(self, text):
+        """
+        Aufgabe id zurückliefern
+        """
         aid_curs = self.conn.cursor()
         res = None
         try:
             aid_curs.execute(queries.aid, (text,))
             res = aid_curs.fetchone()[0]
-            #self.conn.commit()
-            #self.completion()
             return res
         except Exception as e:
-            #self.conn.rollback()
-            #return None
             pass
         finally:
             aid_curs.close()
 
-    def add_sub_ref(self, bid, kid, anummer, aid): # Done
-        """Eine Abgabe in die Tabelle Einreichen einfügen"""
+    def add_sub_ref(self, bid, kid, anummer, aid):
+        """
+        Eine Abgabe in die Tabelle "einreichen" einfügen
+        """
         sub_ref_curs = self.conn.cursor()
         #res = False
         try:
@@ -340,8 +242,6 @@ class Dao:
         finally:
             del_curs.close()
             self.close()
-
-
 
     def completion(self):
         self.complete = True

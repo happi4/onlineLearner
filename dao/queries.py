@@ -29,10 +29,14 @@ add_course_with_key = """insert into kurs(name, beschreibungstext,
 add_course_no_key = """insert into kurs(name, beschreibungstext, 
                         ersteller, freieplaetze) values(?, ?, ?, ?)"""
 
+# KursID eines Kurses zurückliefern
+kid = """select kurs.kid from kurs join benutzer 
+        on kurs.ersteller=benutzer.bnummer where kurs.name=? and benutzer.name=?"""
+
 # Registriert?
 is_reg = """select * from einschreiben where bnummer=? and kid=?"""
 
-#Einschreiben
+# Kurseinschreibung
 add_to_course = """insert into einschreiben(bnummer, kid) values(?, ?)"""
 
 # Details des Kurses
@@ -42,8 +46,7 @@ course_details = """select kurs.name, benutzer.name, kurs.freieplaetze, kurs.kid
                     from kurs join benutzer on kurs.ersteller=benutzer.bnummer 
                     where kurs.kid=?"""
 
-
-# Aufgaben
+# Aufgaben zurückliefern
 exercises = """select distinct aufgabe.anummer, aufgabe.name, 
         cast(abgabe.abgabetext as varchar(1000)), 
         cast(avg(cast(bewerten.note as decimal(2, 1))) as decimal(2, 1)) from
@@ -60,13 +63,13 @@ exercises = """select distinct aufgabe.anummer, aufgabe.name,
         order by aufgabe.name, aufgabe.anummer, 
         cast(abgabe.abgabetext as varchar(1000))"""
 
-# Einreichen
+# Abgabe einreichen
 sub_text = """insert into abgabe(abgabetext) values(?)"""
 aid = """select aid from abgabe where cast(abgabetext as varchar(1000))=?"""
 submission_ref = """insert into einreichen (bnummer, kid, anummer, aid) values(?, ?, ?, ?)"""
 
 
-#Löschen
+#Kurs löschen
 delete1 = """delete from bewerten where bewerten.aid in 
         (select abgabe.aid from abgabe join einreichen on einreichen.aid=abgabe.aid where einreichen.kid=?)"""
 delete2 = """delete from abgabe where abgabe.aid in (select einreichen.aid from einreichen where einreichen.kid=?)"""
