@@ -165,7 +165,7 @@ def new_assignment(bid):
         kid = form.course_id.data
         anummer = form.ex_id.data
         print(bid, kid, anummer, aid)
-        status = new_submission.add_sub_ref(int(bid), int(kid), int(anummer), int(aid)) #TODO
+        status = new_submission.add_sub_ref(int(bid), int(kid), int(anummer), int(aid))
         if status is True:
             flash("Submission has been registered successfully")
         else:

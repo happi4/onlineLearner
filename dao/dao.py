@@ -118,6 +118,17 @@ class Dao:
             #self.close()
         return res
 
+    def get_course_key(self, kid):
+        """
+        Einschreibeschlüssel für einen Kurs zurückliefern
+        """
+        #get_key_query = """select einschreibeschluessel from kurs where kid=?"""
+        get_key_curs = self.conn.cursor()
+
+        get_key_curs.execute(queries.get_key, (kid,))
+        res = get_key_curs.fetchone()
+        return res[0]
+
     def get_exercises(self, kid, bid): #no commit, TODO
         """
         Aufgaben und zugehörige Abgaben (wenn vorhanden) zurückliefern

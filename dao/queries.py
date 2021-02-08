@@ -46,6 +46,8 @@ course_details = """select kurs.name, benutzer.name, kurs.freieplaetze, kurs.kid
                     from kurs join benutzer on kurs.ersteller=benutzer.bnummer 
                     where kurs.kid=?"""
 
+get_key = """select einschreibeschluessel from kurs where kid=?"""
+
 # Aufgaben zurückliefern
 exercises = """select distinct aufgabe.anummer, aufgabe.name, 
         cast(abgabe.abgabetext as varchar(1000)), 
