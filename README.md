@@ -45,4 +45,4 @@ Development of a web application called onlineLearner.
 ####### To connect to a DB: #######
 Revise the properties.settings file.  Use the getExternalConnection() method in DBUtil (in script file connect.py).
 
-Translated with www.DeepL.com/Translator (free version)
+For German version, see file "LIESMICH"
