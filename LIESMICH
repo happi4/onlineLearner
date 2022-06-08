@@ -1,7 +1,7 @@
-####### Ziel ####### 
+### Ziel
 Entwicklung einer Web-Anwendung namens onlineLearner. 
 
-####### Funktionalitäten #######
+### Funktionalitäten
 - Ein Benutzer kann unter "Meine Kurse" die Kurse sehen, die er erstellt hat, sowie die, in denen er angemeldet ist. Die Kurse mit mindestens einem freien Platz stehen unter "Verfügbare Kurse".
 - Ein Benutzer kann Kurse erstellen. Einige Informationen zum Kurs (Kursname, Beschreibung, Gesamtzahl der Plätze, Anmeldeschlüssel) müssen in ein Formular eingetragen werden und werden über eine Postanforderung versendet.
 - Beim Klick auf den Titel eines Kurses werden die Details des Kurses angezeigt. Es werden der Name, die Anzahl der freien Plätze, die Beschreibung und eine Liste der Übungen des Kurses angezeigt.
@@ -9,31 +9,30 @@ Entwicklung einer Web-Anwendung namens onlineLearner.
 - Ein Benutzer kann nur die Kurse löschen, die er erstellt hat. Wenn er versucht, einen anderen Kurs zu löschen, erhält er eine Fehlermeldung. Das Löschen eines Kurses ist nur auf der Seite mit den Kursdetails möglich.
 - Auf der Seite mit den Kursdetails ist es möglich, eine Einsendeaufgabe für eine Übung hochzuladen. Eine Einsendung enthält Text. Sie kann nur einmal für eine Übung durchgeführt werden.
 
-####### NB: Benutzer sind der Einfachheit halber hardcodiert. Daher keine Login-Funktionalität. #######
+NB: Benutzer sind der Einfachheit halber hardcodiert. Daher keine Login-Funktionalität.
 
 
 
-####### Python Installation #######
+### Python Installation
     1. Installiert Python (https://www.python.org/downloads/) auf euren Rechnern
 
-####### Ändern der Config Parameter #######
+### Ändern der Config Parameter
     1. Ersetzt die Werte in properties.settings mit euren Account- und DB Daten
 
-####### Anlegen einer virtuellen Umgebung (einmalig) #######
+### Anlegen einer virtuellen Umgebung (einmalig)
     1. Zum Projektordner navigieren -> cd ../block3/projekte/python/onlineLearner
     2. python3 -m venv venv
     3. source venv/bin/activate
 
-####### Installation der Dependencies (einmalig) #######
+### Installation der Dependencies (einmalig)
     pip install -r requirements.txt
 
-####### Starten der Webanwendung #######
+### Starten der Webanwendung
     Von der IDE PyCharm aus:
         Nur beim ERSTEN MAL:
             1. Wähle "Do not import settings" aus
             2. -> Open -> Online Learner -> Settings -> Project Interpreter -> Add -> venv
             3. Unter existing environment: Wähle Interpreter ../block3/projekte/python/onlineLearner/venv/bin/python.
-               Ersetze XXX mit eurer Gruppennummer
 
          Sonst führe das Skript app.py aus
 
@@ -42,6 +41,6 @@ Entwicklung einer Web-Anwendung namens onlineLearner.
         2. Aktiviere virtuelle Umgebung mit Anweisung: source venv/bin/activate
         3. python app.py ausführen
 
-####### Um sich mit einer DB zu verbinden: #######
+### Um sich mit einer DB zu verbinden:
 Die Datei properties.settings überarbeiten.  Die Methode getExternalConnection() in DBUtil (in Skript-Datei connect.py) verwenden.
 
