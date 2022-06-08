@@ -1,4 +1,4 @@
-####### Goal ####### 
+## Goal 
 Development of a web application called onlineLearner. 
 
 ####### Functionalities #######
